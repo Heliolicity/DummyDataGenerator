@@ -140,14 +140,7 @@ public class PreparingImpl implements Preparing {
     public void prepareSQLScripts() {
         // TODO Auto-generated method stub
         this.output = new ArrayList<String>();
-        String quot = "'";
-        String line = "";
         String insertLine = "";
-        String strVal;
-        DateTime dateVal;
-        Timestamp tsVal;
-        Integer intVal;
-        Double dblVal;
         String newString;
         String fieldNames;
         List<Field> listFields;
