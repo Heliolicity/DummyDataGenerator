@@ -149,6 +149,29 @@ public class ParsingImpl implements Parsing {
         }
          
     }
+    
+    @Override
+    public void determinePrimaryKey() {
+    	// TODO Auto-generated method stub
+        this.trimLine();
+    	
+        try {
+            
+            int pos = this.inputLine.indexOf("PK");
+            
+            if (pos > 0) this.field.setPrimaryKey(true);
+            else this.field.setPrimaryKey(false);
+             
+        } 
+     
+        catch (StringIndexOutOfBoundsException sioobe) {
+             
+            pl("String Index Out Of Bounds Exception " + sioobe.getMessage());
+            this.field.setPrimaryKey(false);
+             
+        }
+    	
+    }
  
     @Override
     public Field getCompletedField() {

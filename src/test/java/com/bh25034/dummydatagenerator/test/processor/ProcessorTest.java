@@ -1,7 +1,7 @@
 package com.bh25034.dummydatagenerator.test.processor;
 
 import static org.junit.Assert.*;
-
+		
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,8 +18,8 @@ public class ProcessorTest {
 
 	@Test
 	public void testParsingDocumentReturnsRightNumberOfRows() {
-		
-		String line = " COMPANY_NAME		NOT NULL	VARCHAR2(50) ";
+	 
+		String line = " COMPANY_NAME NOT NULL VARCHAR2(50) ";
 		List<String> lines = new ArrayList<String>();
 		lines.add(line);
 		int rows = 1;
@@ -29,7 +29,7 @@ public class ProcessorTest {
 		processor.parseDescription();
 		processor.generateDummyData();
 		assertEquals(rows, processor.getDataMatrix().size());
-		
+	 
 	}
 
 }

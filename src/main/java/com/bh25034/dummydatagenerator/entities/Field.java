@@ -8,7 +8,6 @@ public class Field {
     private boolean primaryKey;
     private boolean notNull;
     private Data data;
-
      
     public Field(String name, String type, String length, boolean primaryKey, boolean notNull, Data data) {
         super();

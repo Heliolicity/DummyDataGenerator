@@ -31,7 +31,7 @@ public class Writer {
              
             for (String line : this.lines) 
               
-             this.printWriter.write(line + "\n");
+            	this.printWriter.write(line + "\n");
              
             this.printWriter.close();
             this.wroteFile = true;

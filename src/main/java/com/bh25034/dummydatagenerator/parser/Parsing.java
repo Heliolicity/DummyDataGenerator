@@ -15,6 +15,8 @@ public interface Parsing {
     public void determineFieldType();
      
     public void determineFieldLength();
+    
+    public void determinePrimaryKey();
      
     public Field getCompletedField();
      

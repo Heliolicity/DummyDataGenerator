@@ -47,6 +47,7 @@ public class ProcessingImpl implements Processing {
                 this.parser.determineNotNull();
                 this.parser.determineFieldType();
                 this.parser.determineFieldLength();
+                this.parser.determinePrimaryKey();
                 field = this.parser.getCompletedField();
                 this.fields.add(field);
                  
@@ -68,6 +69,9 @@ public class ProcessingImpl implements Processing {
              
             if (this.fields != null) {
              
+            	long primaryKey = 1;
+            	List<String> primaryKeyCollection = new ArrayList<String>();
+            	
                 for (int i = 0; i < this.rows; i ++) {
                      
                     this.fieldsWithData = new ArrayList<Field>();
@@ -82,59 +86,94 @@ public class ProcessingImpl implements Processing {
                          
                         if (field.getLength() != null) size = (int) new Double(field.getLength()).doubleValue();
                         else size = 1;
-                         
-                        if (field.getType().toUpperCase().equals("NUMBER")) {
-                             
-                            Data<Integer> data = new Data<Integer>();
-                            Integer randInt = new Integer(this.randomer.generateRandomInteger(size));
-                            data.set(randInt);
-                            newField.setData(data);
-                             
-                        } 
-                         
-                        else if (field.getType().toUpperCase().equals("DATE")) {
-                         
-                            /*Data<DateTime> data = new Data<DateTime>();
-                            DateTime dateTime = new DateTime();
-                            data.set(dateTime);
-                            newField.setData(data);*/
-                        	Data<Date> data = new Data<Date>();
-                        	Date date = new Date(System.currentTimeMillis());
-                        	data.set(date);
-                        	newField.setData(data);
-                             
+                        
+                        if (! field.isPrimaryKey()) {
+                        
+                        	newField.setPrimaryKey(false);
+                        	
+	                        if (field.getType().toUpperCase().equals("NUMBER")) {
+	                             
+	                            Data<Integer> data = new Data<Integer>();
+	                            Integer randInt = new Integer(this.randomer.generateRandomInteger(size));
+	                            data.set(randInt);
+	                            newField.setData(data);
+	                             
+	                        } 
+	                         
+	                        else if (field.getType().toUpperCase().equals("DATE")) {
+	                         
+	                            /*Data<DateTime> data = new Data<DateTime>();
+	                            DateTime dateTime = new DateTime();
+	                            data.set(dateTime);
+	                            newField.setData(data);*/
+	                        	Data<Date> data = new Data<Date>();
+	                        	Date date = new Date(System.currentTimeMillis());
+	                        	data.set(date);
+	                        	newField.setData(data);
+	                             
+	                        }
+	                         
+	                        else if (field.getType().toUpperCase().equals("VARCHAR2")) {
+	                             
+	                            Data<String> data = new Data<String>();
+	                            String randStr = this.randomer.generateRandomString(size);
+	                            data.set(randStr);
+	                            newField.setData(data);
+	                             
+	                        }
+	                         
+	                        else if (field.getType().toUpperCase().equals("TIMESTAMP")) {
+	                             
+	                            Data<Timestamp> data = new Data<Timestamp>();
+	                            DateTime dateTime = new DateTime();
+	                            Timestamp timeStamp = new Timestamp(dateTime.getMillis());
+	                            data.set(timeStamp);
+	                            newField.setData(data);
+	                             
+	                        }
+	                         
+	                        else {
+	                             
+	                            Data<String> data = new Data<String>();
+	                            String randStr = this.randomer.generateRandomString(size);
+	                            data.set(randStr);
+	                            newField.setData(data);
+	                             
+	                        }
+	                    
                         }
-                         
-                        else if (field.getType().toUpperCase().equals("VARCHAR2")) {
-                             
-                            Data<String> data = new Data<String>();
-                            String randStr = this.randomer.generateRandomString(size);
-                            data.set(randStr);
-                            newField.setData(data);
-                             
-                        }
-                         
-                        else if (field.getType().toUpperCase().equals("TIMESTAMP")) {
-                             
-                            Data<Timestamp> data = new Data<Timestamp>();
-                            DateTime dateTime = new DateTime();
-                            Timestamp timeStamp = new Timestamp(dateTime.getMillis());
-                            data.set(timeStamp);
-                            newField.setData(data);
-                             
-                        }
-                         
+                        
                         else {
-                             
-                            Data<String> data = new Data<String>();
-                            String randStr = this.randomer.generateRandomString(size);
-                            data.set(randStr);
-                            newField.setData(data);
-                             
+                        	
+                        	newField.setPrimaryKey(true);
+                        	
+                        	if (field.getType().toUpperCase().equals("NUMBER")) {
+	                            
+	                            Data<Long> data = new Data<Long>();
+	                            //Integer randInt = new Integer(this.randomer.generateRandomInteger(size));
+	                            Long key = new Long(primaryKey);
+	                            //data.set(randInt);
+	                            data.set(key);
+	                            newField.setData(data);
+	                            primaryKey ++;
+	                             
+	                        } 
+                        	
+                        	else {
+	                             
+	                            Data<String> data = new Data<String>();
+	                            String randStr = this.randomer.generateRandomString(size);
+	                            randStr = this.ensureUniqueness(primaryKeyCollection, randStr, size);
+	                            data.set(randStr);
+	                            newField.setData(data);
+	                            primaryKeyCollection.add(randStr);
+	                             
+	                        }
+                        	
                         }
-                     
+                        
                         this.fieldsWithData.add(newField);
-                         
+                        
                     }
                      
                     this.dataMatrix.add(this.fieldsWithData);
@@ -154,7 +193,7 @@ public class ProcessingImpl implements Processing {
          
     }
      
-    public void printData() {
+    /*public void printData() {
          
         pl("PRINTING DATA NOW");
          
@@ -183,8 +222,29 @@ public class ProcessingImpl implements Processing {
              
         }
          
-    }
+    }*/
  
+    private String ensureUniqueness(List<String> collection, String key, int size) {
+    	
+    	String retval;
+    	
+    	if (collection.contains(key)) {
+    		
+    		key = this.randomer.generateRandomString(size);
+    		retval = this.ensureUniqueness(collection, key, size);
+    		
+    	}
+    	
+    	else {
+    		
+    		retval = key;
+    		
+    	}
+    	
+    	return retval;
+    	
+    }
+    
     public List<String> getLines() {
         return lines;
     }
@@ -225,9 +285,11 @@ public class ProcessingImpl implements Processing {
         this.parser = parser;
     }
  
-    private void p(String s) { System.out.print(s); }
+    @SuppressWarnings("unused")
+	private void p(String s) { System.out.print(s); }
      
-    private void pl() { System.out.println(); }
+    @SuppressWarnings("unused")
+	private void pl() { System.out.println(); }
      
     private void pl(String s) { System.out.println(s); }
      

@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
  
 import org.joda.time.DateTime;
- 
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import com.bh25034.dummydatagenerator.entities.Data;
 import com.bh25034.dummydatagenerator.entities.Field;
 import com.bh25034.dummydatagenerator.preparer.Preparing;
@@ -18,15 +20,17 @@ public class PreparingImpl implements Preparing {
     private List<String> output;
     private String delimiter;
     private boolean exportSQL = false;
+    private String dateFormat;
      
-    public PreparingImpl(List<List<Field>> dataMatrix, String tableName, String delimiter, boolean exportSQL) {
+    public PreparingImpl(List<List<Field>> dataMatrix, String tableName, String delimiter, boolean exportSQL, String dateFormat) {
         super();
         this.dataMatrix = dataMatrix;
         this.tableName = tableName;
         this.delimiter = delimiter;
         this.exportSQL = exportSQL;
+        this.dateFormat = dateFormat;
     }
-     
+    
     public PreparingImpl(List<List<Field>> dataMatrix) {
         super();
         this.dataMatrix = dataMatrix;
@@ -39,11 +43,6 @@ public class PreparingImpl implements Preparing {
         this.output = new ArrayList<String>();
         String quot = "'";
         String line = "";
-        String strVal;
-        DateTime dateVal;
-        Timestamp tsVal;
-        Integer intVal;
-        Double dblVal;
          
         //pl("DATA MATRIX SIZE: " + this.dataMatrix.size());
          
@@ -64,9 +63,9 @@ public class PreparingImpl implements Preparing {
                  
                 else if (field.getType().equals("NUMBER")) {
                      
-                    Data<Integer> data = field.getData();
+                    Data<Long> data = field.getData();
                      
-                    if (data != null) line += "" + data.get().intValue();
+                    if (data != null) line += "" + data.get().longValue();
                     else line += "";
                      
                 }
@@ -74,19 +73,23 @@ public class PreparingImpl implements Preparing {
                 else if (field.getType().equals("DATE")) {
                      
                     Data<DateTime> data = field.getData();
+                    DateTimeFormatter formatter = DateTimeFormat.forPattern(this.dateFormat);
+                    DateTime dateTime = new DateTime(data.get());
+                    String date = formatter.print(dateTime);
                      
                     if (this.exportSQL) {
                     	
                     	Date tempDate = new Date(System.currentTimeMillis());
                         
-                        if (data != null) line += "TO_DATE(" + quot + data.get() + quot + ", 'yyyy-mm-dd')";
-                        else line += "TO_DATE(" + quot + tempDate + quot + ", 'yyyy-mm-dd')";
+                        if (data != null) line += "TO_DATE(" + quot + data.get() + quot + ", '" + this.dateFormat + "')";
+                        else line += "TO_DATE(" + quot + tempDate + quot + ", '" + this.dateFormat + "')";
                     	
                     }
                     
                     else {
                     
-	                    if (data != null) line += quot + data.get() + quot;
+	                    //if (data != null) line += quot + data.get() + quot;
+                    	if (data != null) line += quot + date + quot;
 	                    else line += quot + "" + quot;
 	                    
                     }
@@ -224,6 +227,7 @@ public class PreparingImpl implements Preparing {
     @SuppressWarnings("unused")
     private void pl() { System.out.println(); }
      
-    private void pl(String s) { System.out.println(s); }
+    @SuppressWarnings("unused")
+	private void pl(String s) { System.out.println(s); }
      
 }

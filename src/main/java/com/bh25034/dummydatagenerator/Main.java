@@ -4,6 +4,8 @@ import java.util.List;
 import java.io.File;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import com.bh25034.dummydatagenerator.entities.Field;
 import com.bh25034.dummydatagenerator.filehandling.Reader;
@@ -24,15 +26,16 @@ public class Main {
     private static String tableName;
     private static int rows;
     private static boolean exportSQL;
+    private static String dateFormat;
      
     public static void main(String[] args) {
         // TODO Auto-generated method stub
  
         man();
         
-        if (args.length < 5) {
+        if (args.length < 6) {
         
-        	pl("Please specify five arguments");
+        	pl("Please specify six arguments");
             System.exit(0);
         	
         }
@@ -40,14 +43,14 @@ public class Main {
         else {
         
 	        try {
-	             
-	            validateArguments(args[0], args[1], args[2], args[3], args[4]);
+	            
+	            validateArguments(args[0], args[1], args[2], args[3], args[4], args[5]);
 	         
 	        } 
 	         
 	        catch (ArrayIndexOutOfBoundsException aioobe) {
 	             
-	            pl("Please specify five arguments");
+	            pl("Please specify six arguments");
 	            System.exit(0);
 	             
 	        }
@@ -72,10 +75,24 @@ public class Main {
             processor.generateDummyData();
             pl("# Dataset generated" + "\t-- " + new DateTime(System.currentTimeMillis()));
             List<List<Field>> fieldsWithData = processor.getDataMatrix();
-            Preparing preparer = new PreparingImpl(fieldsWithData, tableName, ",", exportSQL);
-            pl("# Preparing SQL scripts" + "\t-- " + new DateTime(System.currentTimeMillis()));
-            preparer.prepareSQLScripts();
-            pl("# SQL scripts prepared" + "\t-- " + new DateTime(System.currentTimeMillis()));
+            Preparing preparer = new PreparingImpl(fieldsWithData, tableName, ",", exportSQL, dateFormat);
+            
+            if (exportSQL) {
+            
+	            pl("# Preparing SQL scripts" + "\t-- " + new DateTime(System.currentTimeMillis()));
+	            preparer.prepareSQLScripts();
+	            pl("# SQL scripts prepared" + "\t-- " + new DateTime(System.currentTimeMillis()));
+	            
+            }
+            
+            else {
+            	
+            	pl("# Preparing delimited output" + "\t-- " + new DateTime(System.currentTimeMillis()));
+            	preparer.prepareDelimitedExport();
+            	pl("# Delimited output prepared" + "\t-- " + new DateTime(System.currentTimeMillis()));
+            	
+            }
+            
             List<String> output = preparer.getOutput();
             Writer writer = new Writer(fileOut, output);
             pl("# Writing to file: " + fileOut + "\t-- " + new DateTime(System.currentTimeMillis()));
@@ -111,23 +128,25 @@ public class Main {
         pl("########### Dummy Data Generator ################################################################################################");
         pl("# Description: Application for generating mock/dummy data for rational database tables\t\t\t\t\t\t#");
         pl("# Usage: \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t#");
-        pl("# java com.bh25034.dummydatagenerator.Main <fileIn> <fileOut> <tableName> <rows> <exportMode>\t\t\t\t\t#");
+        pl("# java com.bh25034.dummydatagenerator.Main <fileIn> <fileOut> <tableName> <rows> <exportMode> <dateFormat>\t\t\t#");
         pl("#   -- <fileIn>:\tThe path to the file containing the SQL DESC statement of the table you wish to generate data for.\t#");
         pl("#   -- <fileOut>:\tThe path where you would like the file containing the mock data (as INSERT statements) to be saved to.\t#");
         pl("#   -- <tableName>:\tThe name of the table\t\t\t\t\t\t\t\t\t\t\t#");
         pl("#   -- <rows>:\t\tThe number of rows of dummy data you wish to generate.\t\t\t\t\t\t\t#");
         pl("#   -- <exportMode>:\tExport CSV or SQL statements (YES/NO, Y/N, TRUE/FALSE, T/F, 0/1).\t\t\t\t\t#");
+        pl("#   -- <dateFormat>:\tThe date format you wish to use for date fields.\t\t\t\t\t\t\t#");
         pl();
          
     }
      
-    private static void validateArguments(String a1, String a2, String a3, String a4, String a5) {
+    private static void validateArguments(String a1, String a2, String a3, String a4, String a5, String a6) {
 
         String arg1 = a1;
         String arg2 = a2;
         String arg3 = a3;
         String arg4 = a4;
         String arg5 = a5;
+        String arg6 = a6;
          
         if ((arg1 == null) || (arg1.trim().equals(""))) {
          
@@ -186,7 +205,7 @@ public class Main {
         	
         }
          
-        if ((arg4 != null) || (! arg4.trim().equals(""))) {
+        if ((arg4 != null) && (! arg4.trim().equals(""))) {
              
             try {
                  
@@ -249,6 +268,35 @@ public class Main {
                 System.exit(0);
         		
         	}
+        	
+        }
+        
+        if ((arg6 == null) || (arg6.trim().equals(""))) {
+        	
+        	pl("The date format was not specified");
+            pl("Please run the programme again and specify an date format.");
+            System.exit(0);
+        	
+        }
+        
+        else {
+        	
+        	try {
+        	
+        		@SuppressWarnings("unused")
+				DateTimeFormatter formatter = DateTimeFormat.forPattern(arg6);
+        		dateFormat = arg6;
+        		
+        	}
+        	
+        	catch (IllegalArgumentException iae) {
+        		
+        		pl("The date format provided is not a valid date format");
+                pl("Please run the programme again and specify a valid date format.");
+                System.exit(0);
+        		
+        	}
+        	
         	
         }
         
