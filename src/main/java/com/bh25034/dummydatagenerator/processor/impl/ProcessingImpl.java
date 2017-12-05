@@ -93,9 +93,9 @@ public class ProcessingImpl implements Processing {
                         	
 	                        if (field.getType().toUpperCase().equals("NUMBER")) {
 	                             
-	                            Data<Integer> data = new Data<Integer>();
-	                            Integer randInt = new Integer(this.randomer.generateRandomInteger(size));
-	                            data.set(randInt);
+	                            Data<Long> data = new Data<Long>();
+	                            Long randLong = new Long(this.randomer.generateRandomLong());
+	                            data.set(randLong);
 	                            newField.setData(data);
 	                             
 	                        } 

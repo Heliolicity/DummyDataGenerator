@@ -13,7 +13,7 @@ public class ReaderTest {
 	@Test
 	public void testReadWorks() {
 
-		String path = "C:/Users/e597311/Documents/Development/Java/Workspace/DummyDataGenerator/TEST_DESC.txt";
+		String path = "C:/Users/BobHi/Documents/Workspace/DummyDataGenerator/TEST_DESC.txt";
 		Reader reader = new Reader(path);
 		reader.read();
 		assertTrue(reader.isReadFile());

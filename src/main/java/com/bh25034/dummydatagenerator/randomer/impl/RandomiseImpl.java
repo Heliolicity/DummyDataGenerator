@@ -38,14 +38,24 @@ public class RandomiseImpl implements Randomise {
 
 	@Override
 	public int generateRandomInteger(int size) {
-		return this.randomGenerator.nextInt(size);
+		
+		int rand = this.randomGenerator.nextInt(size);
+		
+		if (rand < 0) rand *= -1;
+		
+		return rand;
+		
 	}
-
 
 	@Override
 	public long generateRandomLong() {
 		// TODO Auto-generated method stub
-		return this.randomGenerator.nextLong();
+		long rand = this.randomGenerator.nextLong();
+		
+		if (rand < 0) rand *= -1;
+		
+		return rand;
+		
 	}
 
 
