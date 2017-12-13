@@ -84,7 +84,8 @@ public class ParserTest {
 		Parser parser = new ParserImpl();
 		parser.setLine(line);
 		parser.determineFieldLength();
-		assertEquals("50", parser.getCompletedField().getLength());
+		float var = 50;
+		assertTrue(var == parser.getCompletedField().getLength());
 	 
 	}
  
