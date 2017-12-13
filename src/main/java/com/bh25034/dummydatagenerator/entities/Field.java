@@ -4,12 +4,12 @@ public class Field {
 	 
     private String name;
     private String type;
-    private String length;
+    private float length;
     private boolean primaryKey;
     private boolean notNull;
     private Data data;
      
-    public Field(String name, String type, String length, boolean primaryKey, boolean notNull, Data data) {
+    public Field(String name, String type, float length, boolean primaryKey, boolean notNull, Data data) {
         super();
         this.name = name;
         this.type = type;
@@ -37,11 +37,11 @@ public class Field {
         this.type = type;
     }
  
-    public String getLength() {
+    public float getLength() {
         return length;
     }
  
-    public void setLength(String length) {
+    public void setLength(float length) {
         this.length = length;
     }
  

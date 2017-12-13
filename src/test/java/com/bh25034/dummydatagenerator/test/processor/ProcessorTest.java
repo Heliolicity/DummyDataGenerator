@@ -7,12 +7,12 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.bh25034.dummydatagenerator.parser.Parsing;
-import com.bh25034.dummydatagenerator.parser.impl.ParsingImpl;
-import com.bh25034.dummydatagenerator.processor.Processing;
-import com.bh25034.dummydatagenerator.processor.impl.ProcessingImpl;
-import com.bh25034.dummydatagenerator.randomer.Randomise;
-import com.bh25034.dummydatagenerator.randomer.impl.RandomiseImpl;
+import com.bh25034.dummydatagenerator.parser.Parser;
+import com.bh25034.dummydatagenerator.parser.impl.ParserImpl;
+import com.bh25034.dummydatagenerator.processor.Processor;
+import com.bh25034.dummydatagenerator.processor.impl.ProcessorImpl;
+import com.bh25034.dummydatagenerator.randomer.Randomer;
+import com.bh25034.dummydatagenerator.randomer.impl.RandomerImpl;
 
 public class ProcessorTest {
 
@@ -23,9 +23,9 @@ public class ProcessorTest {
 		List<String> lines = new ArrayList<String>();
 		lines.add(line);
 		int rows = 1;
-		Parsing parser = new ParsingImpl();
-		Randomise randomer = new RandomiseImpl();
-		Processing processor = new ProcessingImpl(lines, rows, parser, randomer);
+		Parser parser = new ParserImpl();
+		Randomer randomer = new RandomerImpl();
+		Processor processor = new ProcessorImpl(lines, rows, parser, randomer);
 		processor.parseDescription();
 		processor.generateDummyData();
 		assertEquals(rows, processor.getDataMatrix().size());

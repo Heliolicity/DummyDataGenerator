@@ -8,14 +8,14 @@ import java.util.List;
 import org.junit.Test;
 
 import com.bh25034.dummydatagenerator.entities.Field;
-import com.bh25034.dummydatagenerator.parser.Parsing;
-import com.bh25034.dummydatagenerator.parser.impl.ParsingImpl;
-import com.bh25034.dummydatagenerator.preparer.Preparing;
-import com.bh25034.dummydatagenerator.preparer.impl.PreparingImpl;
-import com.bh25034.dummydatagenerator.processor.Processing;
-import com.bh25034.dummydatagenerator.processor.impl.ProcessingImpl;
-import com.bh25034.dummydatagenerator.randomer.Randomise;
-import com.bh25034.dummydatagenerator.randomer.impl.RandomiseImpl;
+import com.bh25034.dummydatagenerator.parser.Parser;
+import com.bh25034.dummydatagenerator.parser.impl.ParserImpl;
+import com.bh25034.dummydatagenerator.preparer.Preparer;
+import com.bh25034.dummydatagenerator.preparer.impl.PreparerImpl;
+import com.bh25034.dummydatagenerator.processor.Processor;
+import com.bh25034.dummydatagenerator.processor.impl.ProcessorImpl;
+import com.bh25034.dummydatagenerator.randomer.Randomer;
+import com.bh25034.dummydatagenerator.randomer.impl.RandomerImpl;
 
 public class PreparerTest {
 
@@ -28,14 +28,14 @@ public class PreparerTest {
 		int rows = 1;
 		String tableName = "TEST";
 		boolean exportSQL = true;
-		Parsing parser = new ParsingImpl();
-        Randomise randomer = new RandomiseImpl();
-        Processing processor = new ProcessingImpl(lines, rows, parser, randomer);
+		Parser parser = new ParserImpl();
+        Randomer randomer = new RandomerImpl();
+        Processor processor = new ProcessorImpl(lines, rows, parser, randomer);
         processor.parseDescription();
         processor.generateDummyData();
         List<List<Field>> fieldsWithData = processor.getDataMatrix();
         String dateFormat = "YYYY-MM-DD";
-        Preparing preparer = new PreparingImpl(fieldsWithData, tableName, ",", exportSQL, dateFormat);
+        Preparer preparer = new PreparerImpl(fieldsWithData, tableName, ",", exportSQL, dateFormat);
 		preparer.prepareDelimitedExport();
 		int inputSize = lines.size();
 		int outputSize = preparer.getOutput().size();
@@ -52,14 +52,14 @@ public class PreparerTest {
 		int rows = 1;
 		String tableName = "TEST";
 		boolean exportSQL = true;
-		Parsing parser = new ParsingImpl();
-        Randomise randomer = new RandomiseImpl();
-        Processing processor = new ProcessingImpl(lines, rows, parser, randomer);
+		Parser parser = new ParserImpl();
+        Randomer randomer = new RandomerImpl();
+        Processor processor = new ProcessorImpl(lines, rows, parser, randomer);
         processor.parseDescription();
         processor.generateDummyData();
         List<List<Field>> fieldsWithData = processor.getDataMatrix();
         String dateFormat = "YYYY-MM-DD";
-        Preparing preparer = new PreparingImpl(fieldsWithData, tableName, ",", exportSQL, dateFormat);
+        Preparer preparer = new PreparerImpl(fieldsWithData, tableName, ",", exportSQL, dateFormat);
 		preparer.prepareSQLScripts();
 		int inputSize = lines.size();
 		int outputSize = preparer.getOutput().size();

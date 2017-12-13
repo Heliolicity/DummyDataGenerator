@@ -29,10 +29,12 @@ public class Writer {
             this.fileWriter = new FileWriter(this.path);
             this.printWriter = new PrintWriter(this.fileWriter);
              
-            for (String line : this.lines) 
+            for (String line : this.lines) {
               
             	this.printWriter.write(line + "\n");
              
+            }
+            
             this.printWriter.close();
             this.wroteFile = true;
              
@@ -40,7 +42,7 @@ public class Writer {
          
         catch (IOException ioe) {
              
-            pl(ioe.getMessage());
+        	System.err.println(ioe.getMessage());
             this.printWriter.close();
             this.wroteFile = false;
              
@@ -71,13 +73,5 @@ public class Writer {
     /*public void setWroteFile(boolean wroteFile) {
         this.wroteFile = wroteFile;
     }*/
- 
-    @SuppressWarnings("unused")
-    private void p(String s) { System.out.print(s); }
-     
-    @SuppressWarnings("unused")
-    private void pl() { System.out.println(); }
-     
-    private void pl(String s) { System.out.println(s); }
      
 }
